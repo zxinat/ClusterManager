@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Mvc5" Version="4.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Azure.Devices" Version="1.18.2" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.5" />
+    <PackageReference Include="MongoDB.Bson" Version="2.10.1" />
+    <PackageReference Include="refit" Version="5.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\ResponseModel\" />
+  </ItemGroup>
+
+</Project>

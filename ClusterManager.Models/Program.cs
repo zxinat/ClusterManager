@@ -4,22 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using ClusterManager.Utility;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
 
-namespace ClusterManager
+namespace ClusterManager.Models
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
-            //AuthResponse.GetAuthorizationResponse();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
