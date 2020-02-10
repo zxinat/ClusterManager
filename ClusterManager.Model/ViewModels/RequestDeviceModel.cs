@@ -14,6 +14,7 @@ namespace ClusterManager.Model.ViewModels
     /// 
     /// </summary>
         public string authorizationPolicyKey { get; set; }
+        public string etag { get; set; }
     /// <summary>
     /// 
     /// </summary>

@@ -7,6 +7,6 @@ namespace ClusterManager.Model
     public class UserInfoModel
     {
         public string email { get; set; }
-        public string pwd { get; set; }
+        public string password { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ClusterManager.Core;
 using ClusterManager.Core.Infrastructures;
 using ClusterManager.Model.ResponseModel;
+using ClusterManager.Model;
 
 namespace ClusterManager.Controllers
 {
@@ -19,20 +20,25 @@ namespace ClusterManager.Controllers
         {
             this._resourceGroupBus = resourceGroupBus;
         }
-        [HttpGet]
-        public async Task<ResourceGroupModel> GetAllResourceGroup()
+        [HttpGet("{email}/{subid}/GetAllResourceGroup")]
+        public async Task<ResourceGroupModel> GetAllResourceGroup(string email,string subid)
         {
-            return await this._resourceGroupBus.GetAllResourceGroup();
+            return await this._resourceGroupBus.GetAllResourceGroup(email,subid);
         }
-        [HttpPut("CreateOrUpdate/{resourceGroupName}/{location}")]
-        public async Task<string> CreateOrUpdate(string resourceGroupName,string location)
+        [HttpPut("{email}/CreateOrUpdate/{resourceGroupName}/{location}")]
+        public async Task<string> CreateOrUpdate(string email,string resourceGroupName,string location)
         {
-            return await this._resourceGroupBus.CreateOrUpdate(resourceGroupName,location);
+            return await this._resourceGroupBus.CreateOrUpdate(email, resourceGroupName,location);
         }
-        [HttpGet("{resourceGroupName}/ListAllResource")]
-        public async Task<string> ListAllResource(string resourceGroupName)
+        [HttpGet("{email}/{resourceGroupName}/ListAllResource")]
+        public async Task<string> ListAllResource(string email,string resourceGroupName)
         {
-            return await this._resourceGroupBus.ListResource(resourceGroupName);
+            return await this._resourceGroupBus.ListResource(email,resourceGroupName);
+        }
+        [HttpGet("{email}/GetSubscriptions")]
+        public async Task<List<SubscriptionModel>> GetSubscriptions(string email)
+        {
+            return await this._resourceGroupBus.GetSubsciptions(email);
         }
     }
 }

@@ -15,14 +15,28 @@ namespace ClusterManager.Model
         public String Email { get; set; }
         [BsonElement("Password")]
         public String Password { get; set; }
-        [BsonElement("TalentId")]
-        public String TalentId { get; set; }
-        [BsonElement("SubscriptionId")]
-        public String SubscriptionId { get; set; }
-        [BsonElement("ClientId")]
-        public String ClientId { get; set; }
-        [BsonElement("ClientSecret")]
-        public String ClientSecret { get; set; }
+        [BsonElement("ServicePrinciples")]
+        public List<ServicePrinciple> servicePrinciples { get; set; }
 
     }
+    public class ServicePrinciple
+    {
+        public bool flag { get; set; }
+        public string TenantId { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+    }
+    /*public class Client
+    {
+        [BsonElement("ClientId")]
+        public string ClientId { get; set; }
+        [BsonElement("ClientSecret")]
+        public string ClientSecret { get; set; }
+    }
+    /*public class Tenant
+    {
+        [BsonElement("TenantId")]
+        public string TenantId { get; set; }
+        public List<Client> clients { get; set; }
+    }*/
 }

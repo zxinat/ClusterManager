@@ -10,6 +10,6 @@ namespace ClusterManager.Dto.Infrastructures
     {
         //获取Token
         // List<TokenModel> GetToken(string tenantId);
-        Task<TokenModel> GetToken();
+        Task<TokenModel> GetToken(string email);
     }
 }

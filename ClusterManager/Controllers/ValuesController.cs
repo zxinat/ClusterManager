@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using ClusterManager.Dao.Infrastructures;
 using ClusterManager.Core.Infrastructures;
+using Newtonsoft.Json.Linq;
 
 namespace ClusterManager.Controllers
 {
@@ -37,6 +38,10 @@ namespace ClusterManager.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
+            new JObject
+            {
+                { "$message",123}
+            };
             return "value";
         }
 

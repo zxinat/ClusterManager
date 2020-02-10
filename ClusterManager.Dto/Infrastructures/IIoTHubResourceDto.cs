@@ -21,8 +21,10 @@ namespace ClusterManager.Dto.Infrastructures
         Task<IoTHubInfoModel> GetIoTHubInfo(string subid, string resourceGroupName, string resourceName, string access_token);
         Task<IoTHubKeys> GetIoTHubKeys(string subid, string resourceGroupName, string resourceName, string access_token);
         Task<string> CreateDevice(AccessPolicyModel createDeviceModel,string deviceId,bool isIotEdge);
-        Task<string> GetIotEdgeDevices(AccessPolicyModel accessPolicyModel, string access_token);
-        Task<string> GetIotDevices(AccessPolicyModel accessPolicyModel, string access_token);
+        Task<DeviceInfoModel> GetDeviceInfo(AccessPolicyModel accessPolicyModel, string deviceId,string access_token);
+        Task<DeviceInfoModel> UpdateDeviceInfo(UpdateDeviceViewModel updateDeviceViewModel, AccessPolicyModel accessPolicyModel, string deviceId, string access_token);
+        Task<object> GetIotEdgeDevices(AccessPolicyModel accessPolicyModel, string access_token);
+        Task<object> GetIotDevices(AccessPolicyModel accessPolicyModel, string access_token);
         IQuery ListDevices(int maxCount, AccessPolicyModel createDeviceModel);
         Task<ConcurrentBag<Device>> GetDevicesAsync( AccessPolicyModel accessPolicyModel);
         Task<string> DeleteDevice(string deviceId, AccessPolicyModel accessPolicyModel);
@@ -31,6 +33,8 @@ namespace ClusterManager.Dto.Infrastructures
         //Task<Twin> UpdateDeviceTwin(string deviceId, string jsonTwinPatch, string etag, AccessPolicyModel accessPolicyModel);
         Task<string> UpdateDeviceTwin(string deviceId, Twin twin, AccessPolicyModel accessPolicyModel, string access_token);
         Task<object> GetIoTEdgeDeviceDeployment(AccessPolicyModel accessPolicyModel, string access_token);
+        Task<object> GetDeviceModules(string deviceId, AccessPolicyModel accessPolicyModel, string access_token);
+        Task<InsightResponseModel> GetIoTHubInsight(string subid, string resourceGroupName, string resourceName, string access_token, InsightModel insightModel);
 
     }
 }

@@ -48,10 +48,10 @@ namespace ClusterManager
             {
                 options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
             });
-            
+
             services.AddCors(options =>
             {
-                
+
                 options.AddPolicy(MyAllowSpecificOrigins,
                     builder =>
                     {
@@ -82,7 +82,7 @@ namespace ClusterManager
             JwtSettings jwtSettings = new JwtSettings();
             Configuration.Bind("JwtSettings", jwtSettings);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options=> {
+                .AddJwtBearer(options => {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -95,9 +95,9 @@ namespace ClusterManager
                     };
                 });
 
-            services.AddHttpClient("chinacloudapi",x=> 
+            services.AddHttpClient("chinacloudapi", x =>
             {
-                x.BaseAddress =new Uri("https://management.chinacloudapi.cn/subscriptions/");
+                x.BaseAddress = new Uri("https://management.chinacloudapi.cn/subscriptions/");
                 x.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
             });
             services.AddHttpClient();
@@ -108,7 +108,7 @@ namespace ClusterManager
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {

@@ -159,12 +159,74 @@ namespace ClusterManager.Dto
             IoTHubDevice ioTHubDevice = new IoTHubDevice(accessPolicyModel);
             return await ioTHubDevice.CreateDevice(deviceId,isIotEdge);
         }
+        public async Task<DeviceInfoModel> GetDeviceInfo(AccessPolicyModel accessPolicyModel,string deviceId,string access_token)
+        {
+            RequestDeviceModel requestDeviceModel = new RequestDeviceModel
+            {
+                apiVersion = "2018-08-30-preview",
+                authorizationPolicyKey = accessPolicyModel.SharedAccessKey,
+                authorizationPolicyName = accessPolicyModel.SharedAccessKeyName,
+                hostName = accessPolicyModel.HostName,
+                requestPath = string.Format("/devices/{0}", deviceId)
+            };
+            string url = "https://main.iothub.ext.azure.cn/api/dataPlane/get";
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var client = this._clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access_token);
+            string requestbody = JsonConvert.SerializeObject(requestDeviceModel);
+            request.Content = new StringContent(requestbody, UnicodeEncoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                TModel<DeviceInfoModel> job = JsonConvert.DeserializeObject<TModel<DeviceInfoModel>>(result);
+                return job.body;
+            }
+            else
+            {
+                return null; 
+            }
+        }
+        public async Task<DeviceInfoModel> UpdateDeviceInfo(UpdateDeviceViewModel updateDeviceViewModel,AccessPolicyModel accessPolicyModel,string deviceId,string access_token)
+        {
+            DeviceInfoModel deviceInfoModel = await GetDeviceInfo(accessPolicyModel, deviceId, access_token);
+            deviceInfoModel.status = updateDeviceViewModel.status;
+            deviceInfoModel.authentication.symmetricKey.primaryKey = updateDeviceViewModel.primaryKey;
+            deviceInfoModel.authentication.symmetricKey.secondaryKey = updateDeviceViewModel.secondaryKey;
+            RequestDeviceModel requestDeviceModel = new RequestDeviceModel
+            {
+                apiVersion = "2018-08-30-preview",
+                authorizationPolicyKey = accessPolicyModel.SharedAccessKey,
+                etag = deviceInfoModel.etag,
+                authorizationPolicyName = accessPolicyModel.SharedAccessKeyName,
+                hostName = accessPolicyModel.HostName,
+                requestBody = JsonConvert.SerializeObject(deviceInfoModel),
+                requestPath = string.Format("/devices/{0}", deviceId)
+            };
+            string url = "https://main.iothub.ext.azure.cn/api/dataPlane/put";
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var client = this._clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access_token);
+            string requestbody = JsonConvert.SerializeObject(requestDeviceModel);
+            request.Content = new StringContent(requestbody, UnicodeEncoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                TModel<DeviceInfoModel> job = JsonConvert.DeserializeObject<TModel<DeviceInfoModel>>(result);
+                return job.body;
+            }
+            else
+            {
+                return null;
+            }
+        }
         public IQuery ListDevices(int maxCount,AccessPolicyModel accessPolicyModel)
         {
             IoTHubDevice ioTHubDevice = new IoTHubDevice(accessPolicyModel);
             return ioTHubDevice.ListDevices(maxCount);
         }
-        public async Task<string> GetIotEdgeDevices(AccessPolicyModel accessPolicyModel,string access_token)
+        public async Task<object> GetIotEdgeDevices(AccessPolicyModel accessPolicyModel,string access_token)
         {
             RequestDeviceModel requestDeviceModel = new RequestDeviceModel()
             {
@@ -197,7 +259,7 @@ namespace ClusterManager.Dto
             }
 
         }
-        public async Task<string> GetIotDevices(AccessPolicyModel accessPolicyModel, string access_token)
+        public async Task<object> GetIotDevices(AccessPolicyModel accessPolicyModel, string access_token)
         {
             RequestDeviceModel requestDeviceModel = new RequestDeviceModel()
             {
@@ -334,7 +396,57 @@ namespace ClusterManager.Dto
             {
                 return response.ReasonPhrase;
             }
-            IKubernetesCluster kubernetesCluster;
+        }
+        public async Task<object> GetDeviceModules(string deviceId,AccessPolicyModel accessPolicyModel,string access_token)
+        {
+            RequestDeviceModel requestDeviceModel = new RequestDeviceModel
+            {
+                apiVersion = "2018-08-30-preview",
+                authorizationPolicyKey = accessPolicyModel.SharedAccessKey,
+                authorizationPolicyName = accessPolicyModel.SharedAccessKeyName,
+                hostName = accessPolicyModel.HostName,
+                requestPath = string.Format("/devices/{0}/modules", deviceId)
+            };
+            string url = "https://main.iothub.ext.azure.cn/api/dataPlane/get";
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var client = this._clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access_token);
+            string requestbody = JsonConvert.SerializeObject(requestDeviceModel);
+            request.Content = new StringContent(requestbody, UnicodeEncoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                JObject job = (JObject)JsonConvert.DeserializeObject(result);
+                return job;
+            }
+            else
+            {
+                return response.ReasonPhrase;
+            }
+        }
+        public async Task<InsightResponseModel> GetIoTHubInsight(string subid, string resourceGroupName, string resourceName, string access_token, InsightModel insightModel)
+        {
+            string url = string.Format("{0}/resourceGroups/{1}/providers/Microsoft.Devices/IotHubs/" +
+                "{2}/providers/microsoft.Insights/metrics?" +
+                "timespan={3}&interval={4}&metricnames={5}&aggregation={6}&metricNamespace=microsoft.devices%2Fiothubs" +
+                "&autoadjusttimegrain=true&validatedimensions=false&api-version=2019-07-01", 
+                subid, resourceGroupName, resourceName,insightModel.timespan,insightModel.interval,insightModel.metricnames,insightModel.aggregation);
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var client = this._clientFactory.CreateClient("chinacloudapi");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access_token);
+            var response = await client.SendAsync(request);
+            string data = await response.Content.ReadAsStringAsync();
+            InsightResponseModel insight = null;
+            if (response.IsSuccessStatusCode)
+            {
+                insight = JsonConvert.DeserializeObject<InsightResponseModel>(data);
+            }
+            else
+            {
+                Console.WriteLine("Error." + response.ReasonPhrase);
+            }
+            return insight;
         }
 
     }
@@ -467,6 +579,7 @@ namespace ClusterManager.Dto
             Task<Twin> twin = registryManager.GetTwinAsync(deviceId);
             return twin;
         }
+        
        /* public Task<Twin> UpdateDeviceTwin(string deviceId,Twin twin)
         {
             //TwinJsonConverter twinJsonConverter=new TwinJsonConverter();

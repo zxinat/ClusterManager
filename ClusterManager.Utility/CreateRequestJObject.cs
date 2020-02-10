@@ -44,5 +44,16 @@ namespace ClusterManager.Utility
             requestmodel.Add("properties", properties);
             return requestmodel;
         }
+        public JObject CreateModulesContentRequestJObject()
+        {
+            var requestBody = new JObject
+            {
+
+            };
+            var modulesContent = new JObject
+            {
+            };
+            return null;   
+        }
     }
 }

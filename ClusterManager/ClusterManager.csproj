@@ -41,6 +41,7 @@
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="WebApiClient.Extensions.Autofac" Version="2.0.3" />
     <PackageReference Include="WebApiClient.JIT" Version="1.1.1" />
+	<DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>

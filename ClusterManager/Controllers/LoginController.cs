@@ -31,7 +31,7 @@ namespace ClusterManager.Controllers
         [HttpPost]
         public IActionResult RequestToken([FromBody] UserInfoModel userInfoModel)
         {
-            if (userInfoModel.email=="694575171@qq.com" && userInfoModel.pwd=="zx000000")
+            if (userInfoModel.email=="694575171@qq.com" && userInfoModel.password=="zx000000")
             {
                 var claims = new[]
                 {

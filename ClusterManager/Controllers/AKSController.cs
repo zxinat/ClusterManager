@@ -18,20 +18,20 @@ namespace ClusterManager.Controllers
         {
             this._aKSBus = aKSBus;
         }
-        [HttpGet("ListAllAKS")]
-        public async Task<object> ListAllAKS()
+        [HttpGet("{email}/{subid}/ListAllAKS")]
+        public async Task<object> ListAllAKS(string email,string subid)
         {
-            return await this._aKSBus.ListAllAKS();
+            return await this._aKSBus.ListAllAKS(email,subid);
         }
-        [HttpGet("GetAKSInfo/{resourceGroup}/{AKSName}")]
-        public async Task<object> GetAKSInfo(string resourceGroup, string AKSName)
+        [HttpGet("{email}/{subid}/{resourceGroup}/GetAKSInfo/{AKSName}")]
+        public async Task<object> GetAKSInfo(string email,string subid,string resourceGroup, string AKSName)
         {
-            return await this._aKSBus.GetAKSInfo(resourceGroup, AKSName);
+            return await this._aKSBus.GetAKSInfo(email,subid,resourceGroup, AKSName);
         }
-        [HttpPost("CreateAKS/{resourceGoupName}/{AKSName}")]
-        public async Task<object> CreateAKS(string resourceGroupName, [FromBody] CreateAKSModel createAKSModel)
+        [HttpPost("{email}/{subid}/{resourceGoupName}/CreateAKS/{AKSName}")]
+        public async Task<object> CreateAKS(string email ,string subid,string resourceGroupName, [FromBody] CreateAKSModel createAKSModel)
         {
-            return await this._aKSBus.CreateAKS(resourceGroupName, createAKSModel);
+            return await this._aKSBus.CreateAKS(email,subid,resourceGroupName, createAKSModel);
         }
     }
 }

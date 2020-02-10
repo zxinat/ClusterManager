@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClusterManager.Dao\ClusterManager.Dao.csproj" />
     <ProjectReference Include="..\ClusterManager.Model\ClusterManager.Model.csproj" />
     <ProjectReference Include="..\ClusterManager.Utility\ClusterManager.Utility.csproj" />
   </ItemGroup>

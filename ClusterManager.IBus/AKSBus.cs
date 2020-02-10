@@ -1,4 +1,5 @@
 ﻿using ClusterManager.Core.Infrastructures;
+using ClusterManager.Dao.Infrastructures;
 using ClusterManager.Dto.Infrastructures;
 using ClusterManager.Model;
 using System;
@@ -12,32 +13,29 @@ namespace ClusterManager.Core
     {
         private readonly IAKSDto _aKSDto;
         private readonly ITokenDto _tokenDto;
-        private string _subid;
-        private string _clientId;
-        private string _clientSecret;
-        public AKSBus(IAKSDto aKSDto,ITokenDto tokenDto)
+        private readonly IAccountDao _accountDao;
+        public AKSBus(IAKSDto aKSDto,ITokenDto tokenDto,IAccountDao accountDao)
         {
             this._aKSDto = aKSDto;
             this._tokenDto = tokenDto;
-            this._subid= "6273fbea-8a11-498b-8218-02b6f4398e12";
-            this._clientId = "57d1ea2f-7ba4-4d03-936a-036368ff957c";
-            this._clientSecret = "77b650d9-f8d3-4511-8587-c6c930e05225";
+            _accountDao = accountDao;
 
         }
-        public async Task<object> ListAllAKS()
+        public async Task<object> ListAllAKS(string email,string subid)
         {
-            string access_token = this._tokenDto.GetToken().Result.access_token;
-            return await this._aKSDto.ListAllAKS(this._subid, access_token);
+            string access_token = this._tokenDto.GetToken(email).Result.access_token;
+            return await this._aKSDto.ListAllAKS(subid, access_token);
         }
-        public async Task<object> GetAKSInfo(string resourceGroup, string AKSName)
+        public async Task<object> GetAKSInfo(string email, string subid,string resourceGroup, string AKSName)
         {
-            string access_token = this._tokenDto.GetToken().Result.access_token;
-            return await this._aKSDto.GetAKSInfo(this._subid, resourceGroup, AKSName, access_token);
+            string access_token = this._tokenDto.GetToken(email).Result.access_token;
+            return await this._aKSDto.GetAKSInfo(subid, resourceGroup, AKSName, access_token);
         }
-        public async Task<object> CreateAKS(string resourceGroupName, CreateAKSModel createAKSModel)
+        public async Task<object> CreateAKS(string email,string subid,string resourceGroupName, CreateAKSModel createAKSModel)
         {
-            string access_token = this._tokenDto.GetToken().Result.access_token;
-            return await this._aKSDto.CreateAKS(this._subid, resourceGroupName, createAKSModel, this._clientId, this._clientSecret, access_token);
+            string access_token = this._tokenDto.GetToken(email).Result.access_token;
+            ServicePrinciple servicePrinciple = _accountDao.GetCurrentService(email);
+            return await this._aKSDto.CreateAKS(subid, resourceGroupName, createAKSModel, servicePrinciple.ClientId, servicePrinciple.ClientSecret, access_token);
         }
     }
 }
